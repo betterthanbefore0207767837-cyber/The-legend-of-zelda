@@ -1,0 +1,376 @@
+--// SKYBOX + THE LEGEND OF ZELDA PAX
+
+local Lighting = game:GetService("Lighting")
+
+--// SKYBOX
+local skyData = {
+	SkyboxBk = "rbxassetid://7951826533",
+	SkyboxDn = "rbxassetid://7951706908",
+	SkyboxFt = "rbxassetid://7951694757",
+	SkyboxLf = "rbxassetid://7951697216",
+	SkyboxRt = "rbxassetid://7951700251",
+	SkyboxUp = "rbxassetid://7951703855"
+}
+
+local function applySkybox()
+	local sky = Lighting:FindFirstChildOfClass("Sky")
+
+	if not sky then
+		sky = Instance.new("Sky")
+		sky.Parent = Lighting
+	end
+
+	for property, value in pairs(skyData) do
+		sky[property] = value
+	end
+end
+
+applySkybox()
+
+--// KEEP SKYBOX ACTIVE
+Lighting.ChildRemoved:Connect(function(child)
+	if child:IsA("Sky") then
+		task.wait()
+		applySkybox()
+	end
+end)
+
+Lighting.ChildAdded:Connect(function(child)
+	if child:IsA("Sky") then
+		task.wait()
+		applySkybox()
+	end
+end)
+
+
+--// TEXTURE REPLACEMENT
+
+local function getAsset(url: string): string
+	local success, result = pcall(function()
+		if writefile and isfile and getcustomasset then
+			local fileName = "tex_" .. tostring(string.len(url) % 99999) .. "_" .. tostring(string.byte(url, 10) or 1) .. ".asset"
+			if not isfile(fileName) then
+				local data = game:HttpGet(url)
+				if data and #data > 80 then
+					writefile(fileName, data)
+				end
+			end
+			local asset = getcustomasset(fileName)
+			if asset and asset ~= "" then
+				return asset
+			end
+		end
+		return url
+	end)
+	return (success and result) or url
+end
+
+local Rules = {
+	{ids = {7658055825}, url = "https://raw.githubusercontent.com/betterthanbefore0207767837-cyber/Ggdddf/refs/heads/main/IMG_2538.png"},
+{ids = {85313933907097}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/logo.png"},
+{ids = {17467242617}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/4-4%20sfx.mp3"},
+{ids = {16810321565}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/0825(1).MP3"},
+{ids = {6384899588}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/intro.mp3"},
+{ids = {16530229616, 16530229541, 16530229695}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/kill%20sound.mp3"},
+{ids = {18175187129}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/orbs.png"},
+{ids = {17860673529}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/orbs.png"},
+{ids = {16810041280}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/win%20sound.mp3"},
+{ids = {16770456156, 16492958314}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/double%20jump.wav"},
+{ids = {177266782}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/select.ogg"},
+{ids = {18239670056}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/win%20game.MP3"},
+{ids = {13854780042}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/left.png"},
+{ids = {13854780213}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/right.png"},
+{ids = {16802957270}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/dead.png"},
+{ids = {12187323909, 12187320363, 12187354260, 12187342816, 12187280273, 12187303601, 12187262242, 12187288714, 12187341500, 12187271237, 12187341020}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/The%20Wild%20Breath%20of%20Zelda.otf"},
+{ids = {121503061771505}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/link.png"},
+{ids = {133917828562858}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/zelda.png"},
+{ids = {17697682466, 17733314783, 100081814360953, 86062306109271, 82135261819112, 96771526359691, 120824068504773, 114306049661290, 91718252417630, 119694504935889}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/Zelda%20Original%20Soundtrack%20-%20Saria's%20Song%20(The%20Lost%20Woods)%20-%20DrSuperMarioMan6464.mp3"},
+{ids = {17026600996}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/match%20point.mp3"},
+{ids = {18525513345}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/match%20making.mp3"},
+{ids = {17138490999}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/0825.MP3"},
+{ids = {81461991645938}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/Level%20background.png"},
+{ids = {13220167337, 13220167472, 13188242420}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/weapon%20background.png"},
+{ids = {17175092502, 17094014569}, url = "https://raw.githubusercontent.com/leitopatatua-lab/nubsini/refs/heads/main/streak.png"},
+{ids = {14632127990}, url = "https://raw.githubusercontent.com/betterthanbefore0207767837-cyber/Diamobd/refs/heads/main/E12D7C98-F685-47CD-81EE-A437AA4C7DDB.png"},
+}
+
+local IdMap: {[string]: string} = {}
+
+for _, rule in ipairs(Rules) do
+	local asset = getAsset(rule.url)
+	for _, id in ipairs(rule.ids) do
+		IdMap[tostring(id)] = asset
+	end
+end
+
+local function apply(obj: Instance)
+	if not obj then return end
+
+	local function replace(property: string)
+		local success, value = pcall(function()
+			return obj[property]
+		end)
+		if not success or type(value) ~= "string" then return end
+		local id = string.match(value, "%d+")
+		if id and IdMap[id] then
+			pcall(function()
+				obj[property] = IdMap[id]
+			end)
+		end
+	end
+
+	if obj:IsA("Sound") then
+		replace("SoundId")
+	elseif obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+		replace("Image")
+	elseif obj:IsA("Decal") or obj:IsA("Texture") then
+		replace("Texture")
+	elseif obj:IsA("MeshPart") then
+		replace("TextureID")
+	end
+end
+
+task.wait(2)
+
+for _, v in ipairs(game:GetDescendants()) do
+	task.spawn(apply, v)
+end
+
+game.DescendantAdded:Connect(function(obj)
+	task.defer(apply, obj)
+end)
+
+-- @r37q - Rick-C17 : NO HANDS dub dub 
+do
+    local Players = game:GetService("Players")
+    local lp = Players.LocalPlayer
+
+    local function bitch(model)
+        if not model or not model.Parent then return end
+        if not model.Name:find(lp.Name, 1, true) then return end
+
+        for _, name in ipairs({"RightArm", "LeftArm"}) do
+            local arm = model:FindFirstChild(name)
+            if arm then
+                pcall(function() arm:Destroy() end)
+            end
+        end
+    end
+
+    local function fuckyouSkid()
+        -- @r37q made all of this
+        local vms = workspace:FindFirstChild("ViewModels")
+        if not vms then return end
+        local fp = vms:FindFirstChild("FirstPerson")
+        if not fp then return end
+        for _, m in ipairs(fp:GetChildren()) do
+            if m:IsA("Model") then
+                bitch(m)
+            end
+        end
+    end
+
+    fuckyouSkid()
+
+    local vms = workspace:FindFirstChild("ViewModels")
+    if vms then
+        -- @r37q made all of this
+        vms.DescendantAdded:Connect(function(obj)
+            if not obj or not obj.Parent then return end
+            if obj.Name == "RightArm" or obj.Name == "LeftArm" then
+                local m = obj.Parent
+                while m and m ~= vms do
+                    if m:IsA("Model") and m.Name:find(lp.Name, 1, true) then
+                        task.defer(function() pcall(function() obj:Destroy() end) end)
+                        return
+                    end
+                    m = m.Parent
+                end
+            end
+        end)
+    else
+        -- @r37q made all of this
+        workspace.ChildAdded:Connect(function(c)
+            if c.Name == "ViewModels" then
+                c.DescendantAdded:Connect(function(obj)
+                    if obj.Name == "RightArm" or obj.Name == "LeftArm" then
+                        task.defer(fuckyouSkid)
+                    end
+                end)
+            end
+        end)
+    end
+
+    -- @r37q made all of this | DONT REMOVE OR I'LL SUE
+    task.spawn(function()
+        while task.wait(0.5) do
+            pcall(fuckyouSkid)
+        end
+    end)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- @r37q made all of this
+-- @r37q - Rick-C17 : Wubba Lubba dub dub 
+do
+    local Players = game:GetService("Players")
+    local lp = Players.LocalPlayer
+
+    local function bitch(model)
+        if not model or not model.Parent then return end
+        if not model.Name:find(lp.Name, 1, true) then return end
+
+        for _, name in ipairs({"RightArm", "LeftArm"}) do
+            local arm = model:FindFirstChild(name)
+            if arm then
+                pcall(function() arm:Destroy() end)
+            end
+        end
+    end
+
+    local function fuckyouSkid()
+        -- @r37q made all of this
+        local vms = workspace:FindFirstChild("ViewModels")
+        if not vms then return end
+        local fp = vms:FindFirstChild("FirstPerson")
+        if not fp then return end
+        for _, m in ipairs(fp:GetChildren()) do
+            if m:IsA("Model") then
+                bitch(m)
+            end
+        end
+    end
+
+    fuckyouSkid()
+
+    local vms = workspace:FindFirstChild("ViewModels")
+    if vms then
+        -- @r37q made all of this
+        vms.DescendantAdded:Connect(function(obj)
+            if not obj or not obj.Parent then return end
+            if obj.Name == "RightArm" or obj.Name == "LeftArm" then
+                local m = obj.Parent
+                while m and m ~= vms do
+                    if m:IsA("Model") and m.Name:find(lp.Name, 1, true) then
+                        task.defer(function() pcall(function() obj:Destroy() end) end)
+                        return
+                    end
+                    m = m.Parent
+                end
+            end
+        end)
+    else
+        -- @r37q made all of this
+        workspace.ChildAdded:Connect(function(c)
+            if c.Name == "ViewModels" then
+                c.DescendantAdded:Connect(function(obj)
+                    if obj.Name == "RightArm" or obj.Name == "LeftArm" then
+                        task.defer(fuckyouSkid)
+                    end
+                end)
+            end
+        end)
+    end
+
+    -- @r37q made all of this | DONT REMOVE OR I'LL SUE
+    task.spawn(function()
+        while task.wait(0.5) do
+            pcall(fuckyouSkid)
+        end
+    end)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- @r37q made all of this
